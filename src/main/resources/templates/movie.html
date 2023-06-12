@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Film</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/assets/owl.carousel.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: max-content;
+            padding-bottom: 450px;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .logo {
+            margin: 0 20px;
+        }
+
+        .logo img {
+            width: 50%;
+            max-width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .details-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .details-container img {
+            width: 20%;
+        }
+
+        .details-container h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .details-container li {
+            margin-bottom: 10px;
+        }
+
+        .details-container li h4 {
+            margin-bottom: 5px;
+        }
+
+        .details-container p {
+            margin-bottom: 5px;
+        }
+
+        .review-section {
+            margin-top: 20px;
+            margin-left: 50px;
+            margin-right: 50px;
+        }
+
+        .review-section h3 {
+            margin-bottom: 10px;
+        }
+
+        .review-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .review-section li {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .review-section li h4 {
+            margin-bottom: 5px;
+        }
+
+        .review-section li p {
+            margin-bottom: 5px;
+        }
+
+        .review-section a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .user-actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .user-actions a {
+            margin-right: 10px;
+        }
+
+        .user-actions a:first-child {
+            margin-left: 0;
+        }
+
+        .user-actions a:last-child {
+            margin-right: 0;
+        }
+
+        .user-actions a.button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .user-actions a.button:hover {
+            background-color: #555;
+        }
+
+        .login-message {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+		.owl-carousel {
+  			display: flex;
+  			justify-content: center;
+  			align-items: center;
+		}
+
+		.owl-carousel .owl-stage {
+  			display: flex;
+  			justify-content: center;
+  			align-items: center;
+		}
+
+		.owl-carousel .owl-item {
+  			display: flex;
+  			justify-content: center;
+  			align-items: center;
+		}
+
+		.owl-carousel .owl-item img {
+  			display: block;
+  			margin: 0 auto;
+  			min-width: 350px;
+		}
+
+		.owl-carousel .owl-nav [class*="owl-"] {
+  			font-size: 30px;
+  			width: 70px;
+  			height: 70px;
+  			line-height: 70px;
+  			background-color: #333;
+  			color: #fff;
+  			border-radius: 50%;
+		}
+
+		.owl-carousel .owl-nav [class*="owl-"]:hover {
+  			background-color: #555;
+		}
+
+
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="/"><img src="/images/logo-siw.png" alt="Logo" width="50%" /></a>
+        </div>
+        <div>
+            <div th:if="${#request.userPrincipal}">
+                <span th:text="${#request.userPrincipal.principal.username}"></span>
+                <a href="/logout">Logout</a>
+            </div>
+            <div th:unless="${#request.userPrincipal}">
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <h1 th:if="${movie}" th:text="${movie.title + ' (' + movie.year + ')'}">Dettagli Film</h1>
+
+    <div class="details-container" th:if="${movie}">
+        <div class="owl-carousel">
+            <div th:if="${movie.image != null}">
+                <img th:src="@{'data:image/*;base64,' + ${movie.image.base64Image}}" alt="Copertina" />
+            </div>
+            <th:block th:if="${!movie.images.isEmpty()}" th:each="image : ${movie.images}">
+                <img th:src="@{'data:image/*;base64,' + ${image.base64Image}}" alt="Immagine" />
+            </th:block>
+        </div>
+        <div th:if="${movie.director}">
+            <h3>Regista:</h3>
+            <a th:href="@{'/artist/' + ${movie.director.id}}" th:text="${movie.director.name + ' ' + movie.director.surname}"></a>
+        </div>
+        <div th:if="${!movie.actors.isEmpty()}">
+            <h3>Cast:</h3>
+            <ul>
+                <li th:each="actor : ${movie.actors}">
+                    <a th:href="@{'/artist/' + ${actor.id}}" th:text="${actor.name + ' ' + actor.surname}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="review-section">
+        <h3>Recensioni:</h3>
+
+        <div th:if="${!movie.reviews.isEmpty()}">
+    	<ul>
+        	<li th:each="review : ${movie.reviews}" class="review-item">
+            	<div class="review-header">
+            	    <h4>
+            	        <span th:each="i : ${#numbers.sequence(1, 5)}" style="color: gold;">
+            	            <span th:if="${i &lt;= review.rating}">&starf;</span>
+            	            <span th:if="${i > review.rating}">&star;</span>
+            	        </span>
+           	        	<span th:text="${review.title}" style="margin-left: 15px;"></span>
+                	</h4>
+                	<p th:text="'Scritto da: ' + ${review.writer.name} + ' ' + ${review.writer.surname}"></p>
+            	</div>
+            	<p th:text="${review.text}"></p>
+        	</li>
+    	</ul>
+	</div>
+
+    <div th:unless="${!movie.reviews.isEmpty()}">
+    	<p>Nessuna recensione disponibile</p>
+    </div>
+	</div>
+
+    <div class="user-actions" th:if="${#request.userPrincipal}">
+        <div th:if="${movie.reviews.isEmpty()}">
+            <a th:href="@{'/newReview/' + ${movie.id}}" class="button">Scrivi per primo una recensione</a>
+        </div>
+        <div th:unless="${movie.reviews.isEmpty()}">
+            <div th:if="${!userReview}">
+                <a th:href="@{'/newReview/' + ${movie.id}}" class="button">Aggiungi una recensione</a>
+            </div>
+            <div th:if="${userReview}">
+                <a th:href="@{'/deleteUserReview/' + ${movie.id}}" class="button">Rimuovi la tua recensione</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-message" th:unless="${#request.userPrincipal}">
+        <a href="/login">Accedi per scrivere una recensione</a>
+    </div>
+
+    <div th:unless="${movie}">Non esiste</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/owl.carousel@2.3.4/dist/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.owl-carousel').owlCarousel({
+                loop: false,
+                margin: 50,
+                nav: true,
+                dots: false,
+                center: true,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 1
+                    },
+                    1000: {
+                        items: 1
+                    }
+                },
+                onInitialized: function () {
+                resizeImages();
+            	},
+            	onResized: function () {
+            	    resizeImages();
+            	}
+            });
+            function resizeImages() {
+            var carousel = $('.owl-carousel');
+            var images = carousel.find('img');
+
+            images.css('max-width', '420px');
+        	}
+        });
+    </script>
+</body>
+
+</html>

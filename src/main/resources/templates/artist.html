@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Artista</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding-bottom: 300px;
+            height: max-content;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .logo {
+            margin: 0 20px;
+        }
+
+        .logo img {
+            width: 50%;
+            max-width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .details-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .details-container img {
+            width: 20%;
+        }
+
+        .details-container h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-container p {
+            margin-bottom: 5px;
+        }
+
+        .details-container span {
+            font-weight: bold;
+        }
+
+        .movie-list {
+            margin-top: 10px;
+        }
+
+        .movie-list a {
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .movie-list a:last-child {
+            margin-right: 0;
+        }
+
+        .movie-list a:hover {
+            text-decoration: underline;
+        }
+
+        .not-found {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="logo">
+        <a href="/"><img src="/images/logo-siw.png" width="50%" alt="Logo" /></a>
+    </div>
+    <div>
+        <div th:if="${#request.userPrincipal}">
+            <span th:text="${#request.userPrincipal.principal.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+        <div th:unless="${#request.userPrincipal}">
+            <a href="/login">Login</a>
+        </div>
+    </div>
+</header>
+
+<h1 th:text="${artist.name} + ' ' + ${artist.surname}">Dettagli Artista</h1>
+
+<div class="details-container">
+    <div th:if="${artist.profilePicture != null}">
+        <img th:src="@{'data:image/*;base64,'+${artist.profilePicture.base64Image}}" width="20%">
+    </div>
+    <div th:if="${artist}">
+        <div th:if="${artist.dateOfDeath != null}">
+            <span th:text="'(N: ' + ${artist.dateOfBirth} + ', M: ' + ${artist.dateOfDeath} + ')'"></span>
+        </div>
+        <div th:unless="${artist.dateOfDeath != null}">
+            <span th:text="'(N: ' + ${artist.dateOfBirth} + ')'"></span>
+        </div>
+        <div th:text="'Nazionalit&agrave;: ' + ${artist.nationality}"></div>
+        <div class="movie-list" th:if="${!artist.directedMovies.isEmpty()}">
+            <span>Film Diretti: </span>
+            <span th:each="movie : ${artist.directedMovies}">
+                <a th:href="@{'/movie/' + ${movie.id}}" th:text="${movie.title} + ' (' + ${movie.year} + '); '"></a>
+            </span>
+        </div>
+        <div class="movie-list" th:if="${!artist.starredMovies.isEmpty()}">
+            <span>Film Recitati: </span>
+            <span th:each="movie : ${artist.starredMovies}">
+                <a th:href="@{'/movie/' + ${movie.id}}" th:text="${movie.title} + ' (' + ${movie.year} + '); '"></a>
+            </span>
+        </div>
+    </div>
+    <div class="not-found" th:unless="${artist}">Non esiste</div>
+</div>
+</body>
+</html>

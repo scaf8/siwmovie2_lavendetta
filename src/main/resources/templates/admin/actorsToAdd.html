@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Scelta attori</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			height: max-content;
+			padding-bottom: 100px;
+		}
+
+		header {
+			background-color: #333;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 70px;
+			margin-bottom: 50px;
+		}
+
+		.logo {
+			margin-left: 20px;
+		}
+
+		.logo img {
+			width: 50%;
+			max-width: 300px;
+		}
+
+		.user-section {
+			margin-right: 20px;
+			color: white;
+		}
+
+		.user-section a {
+			color: white;
+			text-decoration: none;
+			margin-left: 10px;
+		}
+
+
+		.movie-buttons {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.movie-buttons a {
+			margin-left: 5px;
+			padding: 6px 12px;
+			border-radius: 4px;
+			color: white;
+			text-decoration: none;
+		}
+		
+		.fa-white {
+  			color: white;
+		}
+
+
+		.btn-black {
+			background-color: #333;
+		}
+
+		.btn-black:hover {
+			background-color: #555;
+		}
+
+		.btn-red {
+			padding: 5px 10px;
+			border-radius: 10%;
+			background-color: rgb(165, 29, 45);
+		}
+
+		.btn-red:hover {
+			background-color: rgb(224, 27, 36);
+		}
+
+		.add-actors-section {
+			margin-bottom: 50px;
+			margin-left: 350px;
+			margin-right: 350px;
+			padding: 0px;
+			font-size: 20px;
+		}
+
+		.add-actors-section h3 {
+			margin-bottom: 10px;
+			text-align: center;
+		}
+
+		.add-actors-section ul {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		.add-actors-section li {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 10px 0;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.add-actors-section li a {
+			text-decoration: none;
+			color: #333;
+			margin-left: 10px;
+		}
+
+		.finish-button {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.finish-button a {
+			text-decoration: none;
+			background-color: #333;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 4px;
+		}
+
+		.finish-button a:hover {
+			background-color: #555;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<a href="/"><img src="/images/logo-siw.png" width="50%" /></a>
+		</div>
+		<div class="user-section">
+			<div th:if="${#request.userPrincipal}">
+				<span th:text="${#request.userPrincipal.principal.username}"></span>
+				<a href="/logout">Logout</a>
+			</div>
+			<div th:unless="${#request.userPrincipal}">
+				<a href="/login">Login</a>
+			</div>
+		</div>
+	</header>
+
+	<h1 th:text="'Attori del film ' + ${movie.title}"></h1>
+	<div th:if="${movie.actors.isEmpty()}">Non ci sono attori per questo film</div>
+	<ul class="add-actors-section">
+		<li th:each="actor : ${movie.actors}" >
+			<span th:text="${actor.name} + ' ' + ${actor.surname}"></span>
+			<a class="btn-red" th:href="@{'/admin/removeActorFromMovie/' + ${actor.id} + '/' + ${movie.id}}"><i class="fas fa-minus fa-white"></i></a>
+		</li>
+	</ul>
+
+	<div class="add-actors-section">
+		<h3>Attori che si possono aggiungere:</h3>
+		<ul >
+			<li th:each="actor : ${actorsToAdd}">
+				<span th:text="${actor.name} + ' ' + ${actor.surname}"></span>
+				<div class="movie-buttons">
+					<a class="btn-black" th:href="@{'/admin/addActorToMovie/' + ${actor.id} + '/' + ${movie.id}}"><i class="fas fa-plus fa-white"></i></a>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="finish-button">
+		<a th:href="@{'/admin/formUpdateMovie/' + ${movie.id}}">Fine</a>
+	</div>
+</body>
+
+</html>

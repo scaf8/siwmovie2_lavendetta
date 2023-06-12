@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Film</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			height: max-content;
+			padding-bottom: 100px;
+		}
+
+		header {
+			background-color: #333;
+			padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		h1 {
+			text-align: center;
+			margin-top: 70px;
+			margin-bottom: 50px;
+		}
+
+		
+		.logo {
+			margin-left: 20px;
+		}
+
+		.logo img {
+			width: 50%;
+			max-width: 300px;
+		}
+
+		.user-section {
+			margin-right: 20px;
+			color: white;
+		}
+
+		.user-section a {
+			color: white;
+			text-decoration: none;
+			margin-left: 10px;
+		}
+
+		.movie-list {
+			list-style-type: none;
+			padding: 0;
+			margin-left: 300px;
+			margin-right: 300px;
+		}
+
+		.movie-item {
+			font-size: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-bottom: 1px solid #ccc;
+			padding-bottom: 20px;
+			padding-top: 20px;
+		}
+
+		.movie-title {
+			font-weight: bold;
+			margin-right: 10px;
+		}
+
+		.movie-buttons {
+			display: flex;
+		}
+
+		.movie-buttons a {
+			margin-left: 5px;
+			padding: 6px 12px;
+			border-radius: 4px;
+			color: white;
+			text-decoration: none;
+		}
+
+		.btn-black {
+			background-color: #333;
+		}
+		
+		.btn-black:hover {
+			background-color: #555;
+		}
+
+		.btn-red {
+			background-color: rgb(165, 29, 45);
+		}
+		
+		.btn-red:hover {
+			background-color: rgb(224, 27, 36);
+		}
+
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<a href="/"><img src="/images/logo-siw.png" width="50%" /></a>
+		</div>
+		<div class="user-section">
+			<div th:if="${#request.userPrincipal}">
+				<span th:text="${#request.userPrincipal.principal.username}"></span>
+				<a href="/logout">Logout</a>
+			</div>
+			<div th:unless="${#request.userPrincipal}">
+				<a href="/login">Login</a>
+			</div>
+		</div>
+	</header>
+
+	<h1>Film</h1>
+	<div th:if="${movies.isEmpty()}">Non ci sono film nel sistema</div>
+	<ul class="movie-list">
+		<li th:each="movie : ${movies}">
+			<div class="movie-item">
+				<span class="movie-title" th:text="${movie.title} + ' (' + ${movie.year} + ')'"></span>
+				<div class="movie-buttons">
+					<a class="btn-black" th:href="@{'/admin/formUpdateMovie/' + ${movie.id}}"><i class="fas fa-cog"></i></a>
+					<a class="btn-red" th:href="@{'/admin/deleteMovie/' + ${movie.id}}"><i class="fas fa-trash-alt"></i></a>
+				</div>
+			</div>
+		</li>
+	</ul>
+</body>
+
+</html>

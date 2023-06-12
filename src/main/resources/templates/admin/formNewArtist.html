@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>New Artist</title>
+	<link rel="stylesheet" href="/css/stile.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding-bottom: 250px;
+		}
+
+		header {
+			background-color: #333;
+			padding: 10px;
+			display: flex;
+			align-items: center;
+		}
+
+		header a {
+			color: white;
+			margin-left: 10px;
+			text-decoration: none;
+		}
+
+		.logo {
+			margin: 0 20px;
+		}
+
+		.logo img {
+			width: 50%;
+			max-width: 300px;
+		}
+
+		h1 {
+			text-align: center;
+			margin: 70px 0;
+		}
+
+		form {
+			width: 300px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: rgba(255, 255, 255, 0.3);
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		form div {
+			margin-bottom: 10px;
+		}
+
+		form label {
+			display: block;
+			margin-bottom: 5px;
+			color: white;
+		}
+
+		form input[type="text"] {
+			width: 96%;
+			padding: 5px;
+			border-radius: 3px;
+			border: 1px solid #ccc;
+		}
+
+		form input[type="file"] {
+			width: 100%;
+			padding: 5px;
+		}
+
+		form button {
+			padding: 10px 20px;
+			background-color: #333;
+			color: #fff;
+			border: none;
+			border-radius: 3px;
+			cursor: pointer;
+		}
+
+		form span {
+			color: red;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+			<a href="/"><img src="/images/logo-siw.png" alt="Logo" /></a>
+		</div>
+		<div th:if="${#request.userPrincipal}">
+			<span th:text="${#request.userPrincipal.principal.username}"></span>
+			<a href="/logout">Logout</a>
+		</div>
+		<div th:unless="${#request.userPrincipal}">
+			<a href="/login">Login</a>
+		</div>
+	</header>
+
+	<h1>Aggiungi un artista</h1>
+	<form th:action="@{/admin/artist}" method="POST" th:object="${artist}" enctype="multipart/form-data">
+		<div th:if="${#fields.hasGlobalErrors()}">
+			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+		</div>
+
+		<div>
+			<label>Nome:</label>
+			<input type="text" th:field="${artist.name}" required />
+			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+		</div>
+
+		<div>
+			<label>Cognome:</label>
+			<input type="text" th:field="${artist.surname}" required />
+			<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+			</span>
+		</div>
+
+		<div>
+			<label>Nazionalit&agrave;:</label>
+			<input type="text" th:field="${artist.nationality}" required />
+		</div>
+
+		<div>
+			<label>Data di nascita:</label>
+			<input type="date" th:field="${artist.dateOfBirth}" required />
+		</div>
+		<div>
+			<label>Data di morte:</label>
+			<input type="date" th:field="${artist.dateOfDeath}" />
+		</div>
+
+		<div>
+			<label>Immagine:</label>
+			<input type="file" accept="image/*" name="file" required placeholder="Immagine Profilo" />
+		</div>
+
+		<div>
+			<button type="submit">Conferma</button>
+		</div>
+	</form>
+</body>
+
+</html>

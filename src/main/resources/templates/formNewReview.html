@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>New Review</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding-bottom: 320px;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .logo {
+            margin: 0 20px;
+        }
+
+        .logo img {
+            width: 50%;
+            max-width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 70px 0;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        form label {
+            color:white;
+        }
+
+        form div {
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        form span {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input[type="text"],
+        form textarea {
+            width: 97%;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .rating {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .rating .text-muted {
+            color: white;
+        }
+
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .rating-stars input[type="range"] {
+    		-webkit-appearance: none;
+    		-moz-appearance: none;
+    		appearance: none;
+    		background: transparent;
+		}
+
+		.rating-stars input[type="range"]::-webkit-slider-thumb {
+    		-webkit-appearance: none;
+    		appearance: none;
+    		width: 0;
+    		height: 0;
+		}
+
+		.rating-stars input[type="range"]::-moz-range-thumb {
+    		-moz-appearance: none;
+    		appearance: none;
+    		width: 0;
+    		height: 0;
+		}
+
+        .rating-icons .star.checked {
+            color: gold;
+            font-weight: bold;
+        }
+
+        .rating-icons {
+            display: flex;
+            color: white;
+        }
+
+        .rating-icons .star {
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .rating-icons .star:hover,
+        .rating-icons .star.checked {
+            color: gold;
+        }
+
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const ratingInput = document.getElementById('rating');
+            const ratingStars = document.querySelectorAll('.rating-icons .star');
+
+            ratingStars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    ratingInput.value = index + 1;
+                    ratingStars.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.add('checked');
+                        } else {
+                            s.classList.remove('checked');
+                        }
+                    });
+                });
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="/"><img src="/images/logo-siw.png" width="50%" /></a>
+        </div>
+        <div>
+            <div th:if="${#request.userPrincipal}">
+                <span th:text="${#request.userPrincipal.principal.username}"></span>
+                <a href="/logout">Logout</a>
+            </div>
+            <div th:unless="${#request.userPrincipal}">
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <h1 th:text="'Scrivi una recensione per il film ' + ${movie.title}"></h1>
+
+    <form th:action="@{/movie}" method="POST" th:object="${review}">
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+        </div>
+
+        <input type="hidden" th:value="${movie.id}" name="movieId">
+        <input type="hidden" th:value="${user.id}" name="userId">
+
+        <div>
+            <label>Titolo:</label>
+            <span><input type="text" th:field="${review.title}" required></span>
+            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+        </div>
+
+        <div>
+            <label for="rating">Valutazione:</label>
+            <div class="rating">
+                <div class="rating-stars">
+                    <input type="range" name="rating" id="rating" min="1" max="5" step="1" required style="width: 0px;height: 0px;margin-bottom: 0px;margin-top: 0px;margin-right: 0px;margin-left: 0px;"/>
+                    <div class="rating-icons">
+                        <span class="star far fa-star"></span>
+                        <span class="star far fa-star"></span>
+                        <span class="star far fa-star"></span>
+                        <span class="star far fa-star"></span>
+                        <span class="star far fa-star"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label>Testo:</label>
+            <textarea th:field="${review.text}" rows="4" cols="50"></textarea>
+        </div>
+
+        <div>
+            <span><button type="submit">Conferma</button></span>
+        </div>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+body {
+    color: white;
+    font-family: Arial, sans-serif;
+    background-image: url("/images/sfondo_siwmovie2.jpg");
+    background-color: rgba(0, 0, 0, 0.8);
+	background-blend-mode: multiply;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: max-content;
+}
+
+a {
+    text-decoration: none;
+    color: darkgrey;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+label {
+    width: 8em;
+    display: inline-block;
+}
+
+header {
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    margin-left: 10px;
+    font-size: 25px;
+}
+
+header span {
+	text-decoration: none;
+    color: white;
+    font-size: 25px;
+}
+
+.login-link {
+    margin-left: auto;
+    color: white;
+    margin-left: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.menu {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 20px;
+    height: 100vh;
+}
+
+.menu a {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.menu a:hover {
+    background-color: #555;
+}
+
+.menu img {
+    display: block;
+    margin: 0 auto 10px;
+    width: 280px;
+    height: 200px;
+}
+
+.menu span {
+    display: block;
+    margin-top: 5px;
+}
+
+form {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0);
+    
+}
+
+form div {
+    margin-bottom: 10px;
+    color: black;
+}
+
+form span {
+    display: block;
+    margin-bottom: 5px;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.register-link a {
+    color: white;
+    text-decoration: underline;
+}
+

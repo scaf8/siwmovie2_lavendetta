@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Artist
+	</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+	
+	<style>
+		
+		body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding-bottom: 200px;
+            height: max-content;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        header a {
+            color: white;
+            margin-left: 10px;
+            text-decoration: none;
+        }
+
+        .logo {
+            margin: 0 20px;
+        }
+
+        .logo img {
+            width: 50%;
+            max-width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 50px 0;
+        }
+        
+        .details-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .details-container img {
+            width: 20%;
+        }
+
+        .details-container h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .details-container p {
+            margin-bottom: 5px;
+        }
+
+        .details-container span {
+            font-weight: bold;
+        }
+
+		.anchor-box {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            margin: 20px 500px;
+            border-radius: 4px;
+            font-size: 20px;
+        }
+
+        .anchor-box a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .custom-button2 {
+  			text-align: center;
+  			background-color: #333;
+  			color: white;
+  			text-decoration: none;
+  			border-radius: 4px;
+  			border: none;
+  			font-size: 20px;
+  			font-weight: bold;
+  			padding: 7px;
+		}
+		
+		.custom-button2:hover {
+			background-color: #555;
+		}
+		
+		.finish-button {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.finish-button a {
+			text-decoration: none;
+			background-color: #333;
+			color: white;
+			padding: 10px 20px;
+			border-radius: 4px;
+		}
+
+		.finish-button a:hover {
+			background-color: #555;
+		}
+	</style>
+	
+</head>
+
+<body>
+	<header>
+		<div class="logo">
+        <a href="/"><img src="/images/logo-siw.png" width="50%" alt="Logo" /></a>
+    </div>
+    <div>
+        <div th:if="${#request.userPrincipal}">
+            <span th:text="${#request.userPrincipal.principal.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+        <div th:unless="${#request.userPrincipal}">
+            <a href="/login">Login</a>
+        </div>
+    </div>
+	</header>
+
+	<h1>Aggiorna artista</h1>
+	
+	<div class="details-container">
+	<div th:if="${artist}">
+		<div th:if="${artist.profilePicture != null }">
+			<img th:src="@{'data:image/*;base64,'+${artist.profilePicture.base64Image}}" width="20%">
+		</div>
+		<div>
+			<span th:text="${artist.name} + ' ' + ${artist.surname}"></span>
+		</div>
+		<div>
+			<span>Data di nascita: </span>
+			<span th:text="${artist.dateOfBirth}"></span>
+		</div>
+		
+		<div class="anchor-box">
+		
+		<div th:if="${artist.dateOfDeath != null}">
+			<span>Data di morte: </span>
+			<span th:text="${artist.dateOfDeath}"></span>
+		</div>
+		<div th:unless="${artist.dateOfDeath != null}">
+			<form th:action="@{/admin/setDateOfDeath}" method="POST">
+				<label style="width: 15em;">Aggiungi data di morte: </label> 
+				<span><input type="date" name="dateOfDeath" /></span>
+				<input type="hidden" name="artist" th:value="${artist.id}">
+				<input class="custom-button2" type="submit" value="Aggiungi"></input>
+			</form>
+		</div>
+
+		<div th:if="${artist.profilePicture == null}">
+			<form th:action="@{/admin/addProfilePicture}" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="artist" th:value="${artist.id}">
+				<div>
+					<input type="file" accept="image/*" name="file" required/>
+				</div>
+				<input class="custom-button2" type="submit" value="Aggiungi immagine"></input>
+			</form>
+		</div>
+		
+		<div th:unless="${artist.profilePicture == null}">
+			<form th:action="@{/admin/setProfilePicture}" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="artist" th:value="${artist.id}">
+				<div>
+					<input type="file" accept="image/*" name="file" required/>
+				</div>
+				<input class="custom-button2" type="submit" value="Cambia immagine"></input>
+			</form>
+		</div>
+		</div>
+	</div>
+	</div>
+				
+	<div th:unless="${artist}">Artista non esistente</div>
+	
+	<div class="finish-button">
+		<a href="/admin/manageArtists">Torna all'elenco degli artisti</a>
+	</div>
+</body>
+
+</html>
